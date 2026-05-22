@@ -7,6 +7,7 @@ public enum PlayerAction {
   GO_TO_CLEARING("Geradeaus gehen"),
   GO_TO_FOREST("Zurück in den Wald gehen"),
   RETURN_TO_CLEARING("Zurück auf die Lichtung gehen"),
+  RETURN_TO_FOREST("Zurück in den Wald gehen"),
   ENTER_STONE_CIRCLE("In den Steinkreis treten"),
   EXIT_STONE_CIRCLE("Wieder aus dem Steinkreis treten"),
   INSPECT_LARGE_STONE("Einen der großen Steine ansehen"),

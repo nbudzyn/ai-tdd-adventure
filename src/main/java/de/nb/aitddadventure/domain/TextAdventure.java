@@ -7,6 +7,7 @@ import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.PULL_SWORD_FROM_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.RETURN_TO_CLEARING;
+import static de.nb.aitddadventure.domain.PlayerAction.RETURN_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.STEP_BACK_FROM_STONE_SURFACE;
 import static de.nb.aitddadventure.domain.PlayerAction.TOUCH_STONE_MARKS;
 
@@ -28,7 +29,7 @@ public class TextAdventure {
     var swordInStone = createSwordInStone(pulledSword);
     var stoneCircle = createStoneCircle(stoneCircleExit);
     stoneCircleLink.connect(stoneCircle);
-    var strangeFeeling = createStrangeFeeling(swordInStone);
+    var strangeFeeling = createStrangeFeeling(swordInStone, returnedForestLink);
     var largeStone = createLargeStone(stoneSurfaceClearingLink, strangeFeeling);
     var returnedLargeStone = createLargeStone(stoneSurfaceReturnedClearingLink, strangeFeeling);
     var stoneSurfaceClearing = createStoneSurfaceStepBack(stoneCircle, largeStone, returnedForestLink);
@@ -74,9 +75,10 @@ public class TextAdventure {
         new Option(TOUCH_STONE_MARKS, strangeFeeling));
   }
 
-  private Room createStrangeFeeling(Room swordInStone) {
+  private Room createStrangeFeeling(Room swordInStone, RoomLink returnedForestLink) {
     return new Room("Als du einen Finger in die Kerben legst, spürst du einen Luftzug aus dem Kreis.",
-        new Option(ENTER_STONE_CIRCLE, swordInStone));
+        new Option(ENTER_STONE_CIRCLE, swordInStone),
+        new Option(RETURN_TO_FOREST, returnedForestLink));
   }
 
   private Room createStoneCircle(Room stoneCircleExit) {

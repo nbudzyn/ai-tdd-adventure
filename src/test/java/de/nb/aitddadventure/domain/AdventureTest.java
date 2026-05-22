@@ -7,6 +7,7 @@ import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.PULL_SWORD_FROM_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.RETURN_TO_CLEARING;
+import static de.nb.aitddadventure.domain.PlayerAction.RETURN_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.STEP_BACK_FROM_STONE_SURFACE;
 import static de.nb.aitddadventure.domain.PlayerAction.TOUCH_STONE_MARKS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -257,6 +258,21 @@ class AdventureTest {
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Als du einen Finger in die Kerben legst, spürst du einen Luftzug aus dem Kreis.");
+  }
+
+  @Test
+  void shouldOfferReturningToForestAfterFeelingTheDraft() {
+    // Given
+    var adventure = new TextAdventure();
+    var strangeFeeling = goToStrangeFeeling(adventure);
+
+    // When
+    var options = strangeFeeling.options();
+
+    // Then
+    assertThat(options).hasSize(2);
+    assertThat(options.getFirst().action()).isEqualTo(ENTER_STONE_CIRCLE);
+    assertThat(options.get(1).action()).isEqualTo(RETURN_TO_FOREST);
   }
 
   @Test
