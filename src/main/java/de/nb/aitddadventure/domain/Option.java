@@ -2,22 +2,20 @@ package de.nb.aitddadventure.domain;
 
 import com.google.common.annotations.VisibleForTesting;
 
-import java.util.function.Supplier;
-
 /**
  * Auswählbare Spieleraktion mit Zielraum.
  */
 public final class Option {
   private final PlayerAction action;
-  private final Supplier<Room> targetSupplier;
+  private final RoomLink targetLink;
 
   public Option(PlayerAction action, Room target) {
-    this(action, () -> target);
+    this(action, new RoomLink(target));
   }
 
-  public Option(PlayerAction action, Supplier<Room> targetSupplier) {
+  public Option(PlayerAction action, RoomLink targetLink) {
     this.action = action;
-    this.targetSupplier = targetSupplier;
+    this.targetLink = targetLink;
   }
 
   public PlayerAction action() {
@@ -25,7 +23,7 @@ public final class Option {
   }
 
   public Room choose() {
-    return targetSupplier.get();
+    return targetLink.follow();
   }
 
   @VisibleForTesting

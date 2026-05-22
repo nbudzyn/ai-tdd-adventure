@@ -114,6 +114,59 @@ class AdventureTest {
   }
 
   @Test
+  void shouldReturnToForestAsSecondOptionWhenSteppingOutOfStoneCircle() {
+    // Given
+    var adventure = new TextAdventure();
+    var stoneCircle = goToStoneCircle(adventure);
+    var clearingAfterStoneCircle = stoneCircle.option(EXIT_STONE_CIRCLE).choose();
+
+    // When
+    var options = clearingAfterStoneCircle.options();
+
+    // Then
+    assertThat(options).hasSize(2);
+    assertThat(options.get(1).action()).isEqualTo(GO_TO_FOREST);
+  }
+
+  @Test
+  void shouldReachStoneCircleAgainAfterReturningToForestFromStoneCircleExit() {
+    // Given
+    var adventure = new TextAdventure();
+    var stoneCircle = goToStoneCircle(adventure);
+    var clearingAfterStoneCircle = stoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var forest = clearingAfterStoneCircle.option(GO_TO_FOREST).choose();
+    var clearing = forest.option(GO_TO_CLEARING).choose();
+    var option = clearing.option(ENTER_STONE_CIRCLE);
+
+    // When
+    var nextRoom = option.choose();
+
+    // Then
+    assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
+  }
+
+  @Test
+  void shouldReachStoneCircleAgainAfterReturningToForestFromStoneCircleExitTwice() {
+    // Given
+    var adventure = new TextAdventure();
+    var firstStoneCircle = goToStoneCircle(adventure);
+    var firstClearingAfterStoneCircle = firstStoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var firstForest = firstClearingAfterStoneCircle.option(GO_TO_FOREST).choose();
+    var firstClearing = firstForest.option(GO_TO_CLEARING).choose();
+    var secondStoneCircle = firstClearing.option(ENTER_STONE_CIRCLE).choose();
+    var secondClearingAfterStoneCircle = secondStoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var secondForest = secondClearingAfterStoneCircle.option(GO_TO_FOREST).choose();
+    var secondClearing = secondForest.option(GO_TO_CLEARING).choose();
+    var option = secondClearing.option(ENTER_STONE_CIRCLE);
+
+    // When
+    var nextRoom = option.choose();
+
+    // Then
+    assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
+  }
+
+  @Test
   void shouldFeelUnwellAgainWhenEnteringStoneCircleAfterSteppingOut() {
     // Given
     var adventure = new TextAdventure();

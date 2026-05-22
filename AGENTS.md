@@ -29,7 +29,7 @@ Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 - Code oder Teststruktur nur aufräumen, wenn es sinnvoll ist.
 - Danach immer `.\localTest.ps1` ausführen.
 - Falls nach einem Fehlschlag mehr Details nötig sind, danach `.\localTest.ps1 -Stacktrace` ausführen.
-- Nach REFACTOR prüfen, ob sich daraus eine neue oder geschärfte Projektregel ableiten lässt, und diese gegebenenfalls vorschlagen.
+- Nach REFACTOR prüfen, ob sich daraus eine neue oder geschärfte Projektregel mit uebergreifendem Mehrwert ableiten laesst; keine Regeln vorschlagen, die beim Lesen des Codes sofort offensichtlich sind.
 - Danach stoppen und Review abwarten.
 
 ## Regeln zu Architektur und Vorgehen
@@ -50,4 +50,3 @@ Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 ## Fachliche Leitplanken
 
 - Neue Raumtexte werden so formuliert, dass sie natürlich an die auslösende Bewegung oder Handlung anschließen.
-

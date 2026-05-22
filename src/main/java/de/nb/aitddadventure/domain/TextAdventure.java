@@ -17,16 +17,18 @@ public class TextAdventure {
   }
 
   private Room createWorld() {
-    var stoneCircleHolder = new Room[1];
-    var stoneCircleExit = createStoneCircleExit(stoneCircleHolder);
+    var stoneCircleLink = new RoomLink();
+    var returnedForestLink = new RoomLink();
+    var stoneCircleExit = createStoneCircleExit(stoneCircleLink, returnedForestLink);
     var pulledSword = createPulledSword();
     var swordInStone = createSwordInStone(pulledSword);
     var stoneCircle = createStoneCircle(stoneCircleExit);
-    stoneCircleHolder[0] = stoneCircle;
+    stoneCircleLink.connect(stoneCircle);
     var strangeFeeling = createStrangeFeeling(swordInStone);
     var largeStone = createLargeStone(strangeFeeling);
     var returnedClearing = createReturnedClearing(stoneCircle, largeStone);
     var returnedForest = createReturnedForest(returnedClearing);
+    returnedForestLink.connect(returnedForest);
     var clearing = createClearing(stoneCircle, largeStone, returnedForest);
     return createStartForest(clearing);
   }
@@ -64,9 +66,10 @@ public class TextAdventure {
         new Option(EXIT_STONE_CIRCLE, stoneCircleExit));
   }
 
-  private Room createStoneCircleExit(Room[] stoneCircleHolder) {
+  private Room createStoneCircleExit(RoomLink stoneCircleLink, RoomLink returnedForestLink) {
     return new Room("Du trittst aus dem Steinkreis und kommst wieder auf die Lichtung.",
-        new Option(ENTER_STONE_CIRCLE, () -> stoneCircleHolder[0]));
+        new Option(ENTER_STONE_CIRCLE, stoneCircleLink),
+        new Option(GO_TO_FOREST, returnedForestLink));
   }
 
   private Room createSwordInStone(Room pulledSword) {
