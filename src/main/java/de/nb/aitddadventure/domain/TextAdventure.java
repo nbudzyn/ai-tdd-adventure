@@ -17,8 +17,8 @@ public class TextAdventure {
   }
 
   private Room createWorld() {
-    var stoneCircleLink = new RoomLink();
-    var returnedForestLink = new RoomLink();
+    var stoneCircleLink = new RoomLink("Steinkreis nach dem Verlassen");
+    var returnedForestLink = new RoomLink("Wald nach dem Verlassen des Steinkreises");
     var stoneCircleExit = createStoneCircleExit(stoneCircleLink, returnedForestLink);
     var pulledSword = createPulledSword();
     var swordInStone = createSwordInStone(pulledSword);
@@ -30,6 +30,7 @@ public class TextAdventure {
     var returnedForest = createReturnedForest(returnedClearing);
     returnedForestLink.connect(returnedForest);
     var clearing = createClearing(stoneCircle, largeStone, returnedForest);
+    RoomLink.validateAllConnected(stoneCircleLink, returnedForestLink);
     return createStartForest(clearing);
   }
 
