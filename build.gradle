@@ -24,3 +24,23 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.register('localTest', Test) {
+    group = 'verification'
+    description = 'Runs tests with minimal successful output for local TDD loops.'
+
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+
+    testLogging {
+        events 'failed'
+        exceptionFormat 'short'
+    }
+
+    afterSuite { descriptor, result ->
+        if (descriptor.parent == null && result.failedTestCount == 0) {
+            println 'OK'
+        }
+    }
+}

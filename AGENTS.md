@@ -5,7 +5,7 @@ Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 ## RED
 
 - Nur den nächsten fachlichen Test schreiben oder anpassen.
-- Danach `mvn test` ausführen.
+- Danach immer `.\gradlew.bat -q localTest` ausführen.
 - Der Test muss fehlschlagen oder nicht kompilieren.
 - Danach stoppen und Review abwarten.
 
@@ -14,14 +14,14 @@ Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 - Nur Produktivcode ändern.
 - Keine Tests ändern.
 - Minimal implementieren, sodass der rote Test grün wird.
-- Danach `mvn test` ausführen.
+- Danach immer `.\gradlew.bat -q localTest` ausführen.
 - Danach stoppen und Review abwarten.
 
 ## REFACTOR
 
 - Kein neues Verhalten einführen.
 - Code oder Teststruktur nur aufräumen, wenn es sinnvoll ist.
-- Danach `mvn test` ausführen.
+- Danach immer `.\gradlew.bat -q localTest` ausführen.
 - Danach stoppen und Review abwarten.
 
 ## Fachliche Leitplanken
