@@ -10,6 +10,7 @@ public enum PlayerAction {
   ENTER_STONE_CIRCLE("In den Steinkreis treten"),
   EXIT_STONE_CIRCLE("Wieder aus dem Steinkreis treten"),
   INSPECT_LARGE_STONE("Einen der großen Steine ansehen"),
+  STEP_BACK_FROM_STONE_SURFACE("Von der Steinfläche zurücktreten"),
   TOUCH_STONE_MARKS("Einen Finger in die Kerben legen"),
   PULL_SWORD_FROM_STONE("Das Schwert aus dem Stein ziehen");
 

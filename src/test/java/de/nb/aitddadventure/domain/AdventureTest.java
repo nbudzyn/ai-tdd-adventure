@@ -7,6 +7,7 @@ import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.PULL_SWORD_FROM_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.RETURN_TO_CLEARING;
+import static de.nb.aitddadventure.domain.PlayerAction.STEP_BACK_FROM_STONE_SURFACE;
 import static de.nb.aitddadventure.domain.PlayerAction.TOUCH_STONE_MARKS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -256,6 +257,20 @@ class AdventureTest {
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Als du einen Finger in die Kerben legst, spürst du einen Luftzug aus dem Kreis.");
+  }
+
+  @Test
+  void shouldReturnToClearingWhenSteppingBackFromTheStoneSurface() {
+    // Given
+    var adventure = new TextAdventure();
+    var largeStone = goToLargeStone(adventure);
+    var option = largeStone.option(STEP_BACK_FROM_STONE_SURFACE);
+
+    // When
+    var nextRoom = option.choose();
+
+    // Then
+    assertThat(nextRoom.description()).isEqualTo("Du trittst von der Steinfläche zurück und stehst wieder auf der Lichtung.");
   }
 
   @Test
