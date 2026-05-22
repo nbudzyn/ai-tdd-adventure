@@ -17,10 +17,12 @@ public class TextAdventure {
   }
 
   private Room createWorld() {
-    var stoneCircleExit = createStoneCircleExit();
+    var stoneCircleHolder = new Room[1];
+    var stoneCircleExit = createStoneCircleExit(stoneCircleHolder);
     var pulledSword = createPulledSword();
     var swordInStone = createSwordInStone(pulledSword);
     var stoneCircle = createStoneCircle(stoneCircleExit);
+    stoneCircleHolder[0] = stoneCircle;
     var strangeFeeling = createStrangeFeeling(swordInStone);
     var largeStone = createLargeStone(strangeFeeling);
     var returnedClearing = createReturnedClearing(stoneCircle, largeStone);
@@ -62,8 +64,9 @@ public class TextAdventure {
         new Option(EXIT_STONE_CIRCLE, stoneCircleExit));
   }
 
-  private Room createStoneCircleExit() {
-    return new Room("Du trittst aus dem Steinkreis und kommst wieder auf die Lichtung.");
+  private Room createStoneCircleExit(Room[] stoneCircleHolder) {
+    return new Room("Du trittst aus dem Steinkreis und kommst wieder auf die Lichtung.",
+        new Option(ENTER_STONE_CIRCLE, () -> stoneCircleHolder[0]));
   }
 
   private Room createSwordInStone(Room pulledSword) {

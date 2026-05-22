@@ -114,6 +114,38 @@ class AdventureTest {
   }
 
   @Test
+  void shouldFeelUnwellAgainWhenEnteringStoneCircleAfterSteppingOut() {
+    // Given
+    var adventure = new TextAdventure();
+    var stoneCircle = goToStoneCircle(adventure);
+    var clearingAfterStoneCircle = stoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var option = clearingAfterStoneCircle.option(ENTER_STONE_CIRCLE);
+
+    // When
+    var nextRoom = option.choose();
+
+    // Then
+    assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
+  }
+
+  @Test
+  void shouldFeelUnwellAgainWhenEnteringStoneCircleAfterSteppingOutTwice() {
+    // Given
+    var adventure = new TextAdventure();
+    var firstStoneCircle = goToStoneCircle(adventure);
+    var firstClearingAfterStoneCircle = firstStoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var secondStoneCircle = firstClearingAfterStoneCircle.option(ENTER_STONE_CIRCLE).choose();
+    var secondClearingAfterStoneCircle = secondStoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var option = secondClearingAfterStoneCircle.option(ENTER_STONE_CIRCLE);
+
+    // When
+    var nextRoom = option.choose();
+
+    // Then
+    assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
+  }
+
+  @Test
   void shouldNoticeFreshMarksWhenLookingAtOneOfTheLargeStones() {
     // Given
     var adventure = new TextAdventure();

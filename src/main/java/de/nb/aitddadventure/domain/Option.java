@@ -2,18 +2,34 @@ package de.nb.aitddadventure.domain;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import java.util.function.Supplier;
+
 /**
  * Auswählbare Spieleraktion mit Zielraum.
  */
-public record Option(PlayerAction action, Room target) {
+public final class Option {
+  private final PlayerAction action;
+  private final Supplier<Room> targetSupplier;
 
-  public Room choose() {
-    return target;
+  public Option(PlayerAction action, Room target) {
+    this(action, () -> target);
   }
 
-  @Override
+  public Option(PlayerAction action, Supplier<Room> targetSupplier) {
+    this.action = action;
+    this.targetSupplier = targetSupplier;
+  }
+
+  public PlayerAction action() {
+    return action;
+  }
+
+  public Room choose() {
+    return targetSupplier.get();
+  }
+
   @VisibleForTesting
   public Room target() {
-    return target;
+    return choose();
   }
 }
