@@ -40,7 +40,7 @@ class ConsoleAdventureTest {
     assertThat(output) //
         .contains(//
             "1", //
-            adventure.start().options().getFirst().text());
+            adventure.start().options().getFirst().action().text());
   }
 
   @Test

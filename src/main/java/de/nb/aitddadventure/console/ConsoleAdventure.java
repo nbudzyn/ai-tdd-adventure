@@ -9,6 +9,9 @@ import de.nb.aitddadventure.domain.TextAdventure;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+/**
+ * Einfache Konsolendarstellung des Adventures.
+ */
 public class ConsoleAdventure {
   private final TextAdventure adventure;
   private Room currentRoom;
@@ -58,7 +61,7 @@ public class ConsoleAdventure {
   }
 
   private String renderOptionLine(Option option, int index) {
-    return optionNumber(index) + ". " + option.text();
+    return optionNumber(index) + ". " + option.action().text();
   }
 
   private int optionNumber(int index) {

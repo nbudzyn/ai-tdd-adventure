@@ -5,6 +5,9 @@ import de.nb.aitddadventure.domain.TextAdventure;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+/**
+ * Einstiegspunkt der Konsolenanwendung des Adventures.
+ */
 public class Main {
 
   @SuppressWarnings("java:S106")

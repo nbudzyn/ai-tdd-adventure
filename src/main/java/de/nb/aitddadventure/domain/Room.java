@@ -1,7 +1,12 @@
 package de.nb.aitddadventure.domain;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.util.List;
 
+/**
+ * Ort mit Beschreibung und verfügbaren Handlungsoptionen.
+ */
 public record Room(String description, List<Option> options) {
 
   public Room(String description, Option... options) {
@@ -16,6 +21,7 @@ public record Room(String description, List<Option> options) {
     return options.get(i);
   }
 
+  @VisibleForTesting
   public Option option(PlayerAction action) {
     return options
         .stream()

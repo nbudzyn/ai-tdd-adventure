@@ -30,11 +30,15 @@ Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 - Falls nach einem Fehlschlag mehr Details nötig sind, danach `.\localTest.ps1 -Stacktrace` ausführen.
 - Danach stoppen und Review abwarten.
 
-## Fachliche Leitplanken
+## Technische Leitplanken
 
 - Tests sind im Given-When-Then-Stil strukturiert.
 - Tests prüfen Fachlichkeit, nicht I/O.
 - Optionen sind fachliche Objekte, keine freien Strings.
 - User-Auswahl erfolgt aktuell über `option.choose()`.
 - Räume liefern Beschreibung und verfügbare Optionen.
+- Jede Produktivklasse trägt einen deutschen Klassenkommentar.
+- Klassenkommentare im Produktivcode sind knappe Nominalphrasen, die ein Objekt beschreiben.
+- Produktivmethoden, die aktuell nur aus Tests verwendet werden, tragen `@VisibleForTesting` von Google.
+- Tests enthalten keine Klassen- oder Methodenkopfkommentare.
 - Nach jedem Zwischenschritt Review abwarten.

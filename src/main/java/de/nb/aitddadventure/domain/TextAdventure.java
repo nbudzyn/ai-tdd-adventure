@@ -6,6 +6,9 @@ import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.TOUCH_STONE_MARKS;
 
+/**
+ * Aufbau der Welt des Textadventures mit ihrem Startpunkt.
+ */
 public class TextAdventure {
   public Room start() {
     return createWorld();
@@ -23,36 +26,34 @@ public class TextAdventure {
   }
 
   private Room createStartForest(Room clearing) {
-    return new Room("Du stehst in einem Wald.", new Option(GO_TO_CLEARING, "Geradeaus gehen", clearing));
+    return new Room("Du stehst in einem Wald.", new Option(GO_TO_CLEARING, clearing));
   }
 
   private Room createClearing(Room stoneCircle, Room largeStone, Room returnedForest) {
     return new Room("Du stehst auf einer Lichtung, in der Mitte ein Steinkreis.",
-        // TODO Duplizierten Text ("In den Steinkreis treten") extrahieren.
-        // - Vielleicht Sollte der Text teil der PlayerAction werden?
-        new Option(ENTER_STONE_CIRCLE, "In den Steinkreis treten", stoneCircle),
-        new Option(INSPECT_LARGE_STONE, "Einen der großen Steine ansehen", largeStone),
-        new Option(GO_TO_FOREST, "Zurück in den Wald gehen", returnedForest));
+        new Option(ENTER_STONE_CIRCLE, stoneCircle),
+        new Option(INSPECT_LARGE_STONE, largeStone),
+        new Option(GO_TO_FOREST, returnedForest));
   }
 
   private Room createReturnedForest(Room returnedClearing) {
-    return new Room("Du stehst wieder im Wald.", new Option(GO_TO_CLEARING, "Auf die Lichtung gehen", returnedClearing));
+    return new Room("Du stehst wieder im Wald.", new Option(GO_TO_CLEARING, returnedClearing));
   }
 
   private Room createReturnedClearing(Room stoneCircle, Room largeStone) {
     return new Room("Du betrittst wieder die Lichtung, in deren Mitte der Steinkreis steht.",
-        new Option(ENTER_STONE_CIRCLE, "In den Steinkreis treten", stoneCircle),
-        new Option(INSPECT_LARGE_STONE, "Einen der großen Steine ansehen", largeStone));
+        new Option(ENTER_STONE_CIRCLE, stoneCircle),
+        new Option(INSPECT_LARGE_STONE, largeStone));
   }
 
   private Room createLargeStone(Room strangeFeeling) {
     return new Room("In der Steinfläche entdeckst du frische Kerben, die nicht vom Wetter stammen.",
-        new Option(TOUCH_STONE_MARKS, "Einen Finger in die Kerben legen", strangeFeeling));
+        new Option(TOUCH_STONE_MARKS, strangeFeeling));
   }
 
   private Room createStrangeFeeling(Room swordInStone) {
     return new Room("Als dein Finger in den Kerben liegt, spürst du aus dem Kreis einen Luftzug.",
-        new Option(ENTER_STONE_CIRCLE, "In den Steinkreis treten", swordInStone));
+        new Option(ENTER_STONE_CIRCLE, swordInStone));
   }
 
   private Room createStoneCircle() {
