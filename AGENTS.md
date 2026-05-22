@@ -2,10 +2,14 @@
 
 Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 
+- Der Standard-Testlauf erfolgt immer über `.\localTest.ps1`.
+- Ein direkter Gradle-Testlauf über die Task `test` darf nur nach Rückfrage beim User durchgeführt werden.
+
 ## RED
 
 - Nur den nächsten fachlichen Test schreiben oder anpassen.
-- Danach immer `.\gradlew.bat -q localTest` ausführen.
+- Danach immer `.\localTest.ps1` ausführen.
+- Falls nach einem Fehlschlag mehr Details nötig sind, danach `.\localTest.ps1 -Stacktrace` ausführen.
 - Der Test muss fehlschlagen oder nicht kompilieren.
 - Danach stoppen und Review abwarten.
 
@@ -14,14 +18,16 @@ Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 - Nur Produktivcode ändern.
 - Keine Tests ändern.
 - Minimal implementieren, sodass der rote Test grün wird.
-- Danach immer `.\gradlew.bat -q localTest` ausführen.
+- Danach immer `.\localTest.ps1` ausführen.
+- Falls nach einem Fehlschlag mehr Details nötig sind, danach `.\localTest.ps1 -Stacktrace` ausführen.
 - Danach stoppen und Review abwarten.
 
 ## REFACTOR
 
 - Kein neues Verhalten einführen.
 - Code oder Teststruktur nur aufräumen, wenn es sinnvoll ist.
-- Danach immer `.\gradlew.bat -q localTest` ausführen.
+- Danach immer `.\localTest.ps1` ausführen.
+- Falls nach einem Fehlschlag mehr Details nötig sind, danach `.\localTest.ps1 -Stacktrace` ausführen.
 - Danach stoppen und Review abwarten.
 
 ## Fachliche Leitplanken
