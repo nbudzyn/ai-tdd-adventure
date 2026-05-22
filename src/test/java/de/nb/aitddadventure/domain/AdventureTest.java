@@ -101,6 +101,22 @@ class AdventureTest {
   }
 
   @Test
+  void shouldOfferReturningToForestAgainWhenStandingOnReturnedClearing() {
+    // Given
+    var adventure = new TextAdventure();
+    var returnedClearing = adventure.start().option(GO_TO_CLEARING).choose().option(GO_TO_FOREST).choose().option(RETURN_TO_CLEARING).choose();
+
+    // When
+    var options = returnedClearing.options();
+
+    // Then
+    assertThat(options).hasSize(3);
+    assertThat(options.getFirst().action()).isEqualTo(ENTER_STONE_CIRCLE);
+    assertThat(options.get(1).action()).isEqualTo(INSPECT_LARGE_STONE);
+    assertThat(options.get(2).action()).isEqualTo(GO_TO_FOREST);
+  }
+
+  @Test
   void shouldStepIntoStoneCircleFromClearing() {
     // Given
     var adventure = new TextAdventure();

@@ -27,7 +27,7 @@ public class TextAdventure {
     stoneCircleLink.connect(stoneCircle);
     var strangeFeeling = createStrangeFeeling(swordInStone);
     var largeStone = createLargeStone(strangeFeeling);
-    var returnedClearing = createReturnedClearing(stoneCircle, largeStone);
+    var returnedClearing = createReturnedClearing(stoneCircle, largeStone, returnedForestLink);
     var returnedForest = createReturnedForest(returnedClearing);
     returnedForestLink.connect(returnedForest);
     var clearing = createClearing(stoneCircle, largeStone, returnedForest);
@@ -48,9 +48,9 @@ public class TextAdventure {
     return new Room("Du gehst in den Wald zurück.", new Option(RETURN_TO_CLEARING, returnedClearing));
   }
 
-  private Room createReturnedClearing(Room stoneCircle, Room largeStone) {
+  private Room createReturnedClearing(Room stoneCircle, Room largeStone, RoomLink returnedForestLink) {
     return new Room("Du kommst wieder auf die Lichtung. In ihrer Mitte liegt der Steinkreis.", new Option(ENTER_STONE_CIRCLE, stoneCircle),
-        new Option(INSPECT_LARGE_STONE, largeStone));
+        new Option(INSPECT_LARGE_STONE, largeStone), new Option(GO_TO_FOREST, returnedForestLink));
   }
 
   private Room createLargeStone(Room strangeFeeling) {
