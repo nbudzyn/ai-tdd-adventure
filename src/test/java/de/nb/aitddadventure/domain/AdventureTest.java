@@ -6,6 +6,7 @@ import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_CLEARING;
 import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.PULL_SWORD_FROM_STONE;
+import static de.nb.aitddadventure.domain.PlayerAction.RETURN_TO_CLEARING;
 import static de.nb.aitddadventure.domain.PlayerAction.TOUCH_STONE_MARKS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -71,12 +72,26 @@ class AdventureTest {
   }
 
   @Test
+  void shouldOfferReturningToClearingWhenStandingInReturnedForest() {
+    // Given
+    var adventure = new TextAdventure();
+    var returnedForest = adventure.start().option(GO_TO_CLEARING).choose().option(GO_TO_FOREST).choose();
+
+    // When
+    var options = returnedForest.options();
+
+    // Then
+    assertThat(options).hasSize(1);
+    assertThat(options.getFirst().action()).isEqualTo(RETURN_TO_CLEARING);
+  }
+
+  @Test
   void shouldReturnToClearingFromReturnedForest() {
     // Given
     var adventure = new TextAdventure();
     var forest = adventure.start();
     var returnedForest = forest.option(GO_TO_CLEARING).choose().option(GO_TO_FOREST).choose();
-    var option = returnedForest.option(GO_TO_CLEARING);
+    var option = returnedForest.option(RETURN_TO_CLEARING);
 
     // When
     var nextRoom = option.choose();
@@ -135,7 +150,7 @@ class AdventureTest {
     var stoneCircle = goToStoneCircle(adventure);
     var clearingAfterStoneCircle = stoneCircle.option(EXIT_STONE_CIRCLE).choose();
     var forest = clearingAfterStoneCircle.option(GO_TO_FOREST).choose();
-    var clearing = forest.option(GO_TO_CLEARING).choose();
+    var clearing = forest.option(RETURN_TO_CLEARING).choose();
     var option = clearing.option(ENTER_STONE_CIRCLE);
 
     // When
@@ -152,11 +167,11 @@ class AdventureTest {
     var firstStoneCircle = goToStoneCircle(adventure);
     var firstClearingAfterStoneCircle = firstStoneCircle.option(EXIT_STONE_CIRCLE).choose();
     var firstForest = firstClearingAfterStoneCircle.option(GO_TO_FOREST).choose();
-    var firstClearing = firstForest.option(GO_TO_CLEARING).choose();
+    var firstClearing = firstForest.option(RETURN_TO_CLEARING).choose();
     var secondStoneCircle = firstClearing.option(ENTER_STONE_CIRCLE).choose();
     var secondClearingAfterStoneCircle = secondStoneCircle.option(EXIT_STONE_CIRCLE).choose();
     var secondForest = secondClearingAfterStoneCircle.option(GO_TO_FOREST).choose();
-    var secondClearing = secondForest.option(GO_TO_CLEARING).choose();
+    var secondClearing = secondForest.option(RETURN_TO_CLEARING).choose();
     var option = secondClearing.option(ENTER_STONE_CIRCLE);
 
     // When

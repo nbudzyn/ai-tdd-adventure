@@ -6,6 +6,7 @@ import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_CLEARING;
 import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.PULL_SWORD_FROM_STONE;
+import static de.nb.aitddadventure.domain.PlayerAction.RETURN_TO_CLEARING;
 import static de.nb.aitddadventure.domain.PlayerAction.TOUCH_STONE_MARKS;
 
 /**
@@ -44,7 +45,7 @@ public class TextAdventure {
   }
 
   private Room createReturnedForest(Room returnedClearing) {
-    return new Room("Du gehst in den Wald zurück.", new Option(GO_TO_CLEARING, returnedClearing));
+    return new Room("Du gehst in den Wald zurück.", new Option(RETURN_TO_CLEARING, returnedClearing));
   }
 
   private Room createReturnedClearing(Room stoneCircle, Room largeStone) {
