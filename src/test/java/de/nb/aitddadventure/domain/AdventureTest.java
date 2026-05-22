@@ -1,6 +1,7 @@
 package de.nb.aitddadventure.domain;
 
 import static de.nb.aitddadventure.domain.PlayerAction.ENTER_STONE_CIRCLE;
+import static de.nb.aitddadventure.domain.PlayerAction.EXIT_STONE_CIRCLE;
 import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_CLEARING;
 import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
@@ -99,6 +100,20 @@ class AdventureTest {
   }
 
   @Test
+  void shouldReturnToClearingWhenSteppingOutOfStoneCircle() {
+    // Given
+    var adventure = new TextAdventure();
+    var stoneCircle = goToStoneCircle(adventure);
+    var option = stoneCircle.option(EXIT_STONE_CIRCLE);
+
+    // When
+    var nextRoom = option.choose();
+
+    // Then
+    assertThat(nextRoom.description()).isEqualTo("Du trittst aus dem Steinkreis und kommst wieder auf die Lichtung.");
+  }
+
+  @Test
   void shouldNoticeFreshMarksWhenLookingAtOneOfTheLargeStones() {
     // Given
     var adventure = new TextAdventure();
@@ -169,6 +184,10 @@ class AdventureTest {
 
   private Room goToSwordInStone(TextAdventure adventure) {
     return goToStrangeFeeling(adventure).option(ENTER_STONE_CIRCLE).choose();
+  }
+
+  private Room goToStoneCircle(TextAdventure adventure) {
+    return goToClearing(adventure).option(ENTER_STONE_CIRCLE).choose();
   }
 
   private Room goToStrangeFeeling(TextAdventure adventure) {

@@ -1,6 +1,7 @@
 package de.nb.aitddadventure.domain;
 
 import static de.nb.aitddadventure.domain.PlayerAction.ENTER_STONE_CIRCLE;
+import static de.nb.aitddadventure.domain.PlayerAction.EXIT_STONE_CIRCLE;
 import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_CLEARING;
 import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
@@ -16,9 +17,10 @@ public class TextAdventure {
   }
 
   private Room createWorld() {
+    var stoneCircleExit = createStoneCircleExit();
     var pulledSword = createPulledSword();
     var swordInStone = createSwordInStone(pulledSword);
-    var stoneCircle = createStoneCircle();
+    var stoneCircle = createStoneCircle(stoneCircleExit);
     var strangeFeeling = createStrangeFeeling(swordInStone);
     var largeStone = createLargeStone(strangeFeeling);
     var returnedClearing = createReturnedClearing(stoneCircle, largeStone);
@@ -55,8 +57,13 @@ public class TextAdventure {
         new Option(ENTER_STONE_CIRCLE, swordInStone));
   }
 
-  private Room createStoneCircle() {
-    return new Room("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
+  private Room createStoneCircle(Room stoneCircleExit) {
+    return new Room("Du trittst zwischen die alten Steine und fühlst dich unwohl.",
+        new Option(EXIT_STONE_CIRCLE, stoneCircleExit));
+  }
+
+  private Room createStoneCircleExit() {
+    return new Room("Du trittst aus dem Steinkreis und kommst wieder auf die Lichtung.");
   }
 
   private Room createSwordInStone(Room pulledSword) {
