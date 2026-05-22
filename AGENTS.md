@@ -41,4 +41,6 @@ Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 - Klassenkommentare im Produktivcode sind knappe Nominalphrasen, die ein Objekt beschreiben.
 - Produktivmethoden, die aktuell nur aus Tests verwendet werden, tragen `@VisibleForTesting` von Google.
 - Tests enthalten keine Klassen- oder Methodenkopfkommentare.
+- Methoden innerhalb einer Datei sind so sortiert, dass Aufrufe von oben nach unten verlaufen.
+- `var` wird verwendet, wenn der konkrete Typ aus Initialisierung und Kontext unmittelbar klar ist; explizite Typen bleiben, wenn sie das Verständnis verbessern.
 - Nach jedem Zwischenschritt Review abwarten.

@@ -4,6 +4,7 @@ import static de.nb.aitddadventure.domain.PlayerAction.ENTER_STONE_CIRCLE;
 import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_CLEARING;
 import static de.nb.aitddadventure.domain.PlayerAction.GO_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.INSPECT_LARGE_STONE;
+import static de.nb.aitddadventure.domain.PlayerAction.PULL_SWORD_FROM_STONE;
 import static de.nb.aitddadventure.domain.PlayerAction.TOUCH_STONE_MARKS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,10 +18,10 @@ class AdventureTest {
   @Test
   void shouldStartInAForest() {
     // Given
-    TextAdventure adventure = new TextAdventure();
+    var adventure = new TextAdventure();
 
     // When
-    Room room = adventure.start();
+    var room = adventure.start();
 
     // Then
     assertThat(room.description()).isEqualTo("Du stehst in einem Wald.");
@@ -29,11 +30,11 @@ class AdventureTest {
   @Test
   void shouldOfferOnlyGoingStraightAtTheBeginning() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room room = adventure.start();
+    var adventure = new TextAdventure();
+    var room = adventure.start();
 
     // When
-    List<Option> options = room.options();
+    var options = room.options();
 
     // Then
     assertThat(options).hasSize(1);
@@ -43,12 +44,12 @@ class AdventureTest {
   @Test
   void shouldEnterClearingWithStoneCircleWhenGoingStraight() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room room = adventure.start();
-    Option option = room.option(GO_TO_CLEARING);
+    var adventure = new TextAdventure();
+    var room = adventure.start();
+    var option = room.option(GO_TO_CLEARING);
 
     // When
-    Room nextRoom = option.choose();
+    var nextRoom = option.choose();
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du stehst auf einer Lichtung, in der Mitte ein Steinkreis.");
@@ -57,13 +58,12 @@ class AdventureTest {
   @Test
   void shouldReturnToForestFromClearing() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room forest = adventure.start();
-    Room clearing = forest.option(GO_TO_CLEARING).choose();
-    Option option = clearing.option(GO_TO_FOREST);
+    var adventure = new TextAdventure();
+    var clearing = goToClearing(adventure);
+    var option = clearing.option(GO_TO_FOREST);
 
     // When
-    Room nextRoom = option.choose();
+    var nextRoom = option.choose();
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du stehst wieder im Wald.");
@@ -72,13 +72,13 @@ class AdventureTest {
   @Test
   void shouldReturnToClearingFromReturnedForest() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room forest = adventure.start();
-    Room returnedForest = forest.option(GO_TO_CLEARING).choose().option(GO_TO_FOREST).choose();
-    Option option = returnedForest.option(GO_TO_CLEARING);
+    var adventure = new TextAdventure();
+    var forest = adventure.start();
+    var returnedForest = forest.option(GO_TO_CLEARING).choose().option(GO_TO_FOREST).choose();
+    var option = returnedForest.option(GO_TO_CLEARING);
 
     // When
-    Room nextRoom = option.choose();
+    var nextRoom = option.choose();
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du betrittst wieder die Lichtung, in deren Mitte der Steinkreis steht.");
@@ -87,13 +87,12 @@ class AdventureTest {
   @Test
   void shouldStepIntoStoneCircleFromClearing() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room forest = adventure.start();
-    Room clearing = forest.option(GO_TO_CLEARING).choose();
-    Option option = clearing.option(ENTER_STONE_CIRCLE);
+    var adventure = new TextAdventure();
+    var clearing = goToClearing(adventure);
+    var option = clearing.option(ENTER_STONE_CIRCLE);
 
     // When
-    Room nextRoom = option.choose();
+    var nextRoom = option.choose();
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Zwischen den alten Steinen fühlst du dich unwohl.");
@@ -102,13 +101,12 @@ class AdventureTest {
   @Test
   void shouldNoticeFreshMarksWhenLookingAtOneOfTheLargeStones() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room forest = adventure.start();
-    Room clearing = forest.option(GO_TO_CLEARING).choose();
-    Option option = clearing.option(INSPECT_LARGE_STONE);
+    var adventure = new TextAdventure();
+    var clearing = goToClearing(adventure);
+    var option = clearing.option(INSPECT_LARGE_STONE);
 
     // When
-    Room nextRoom = option.choose();
+    var nextRoom = option.choose();
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("In der Steinfläche entdeckst du frische Kerben, die nicht vom Wetter stammen.");
@@ -117,14 +115,12 @@ class AdventureTest {
   @Test
   void shouldFeelSomethingStrangeWhenTouchingTheStoneMarks() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room forest = adventure.start();
-    Room clearing = forest.option(GO_TO_CLEARING).choose();
-    Room largeStone = clearing.option(INSPECT_LARGE_STONE).choose();
-    Option option = largeStone.option(TOUCH_STONE_MARKS);
+    var adventure = new TextAdventure();
+    var largeStone = goToLargeStone(adventure);
+    var option = largeStone.option(TOUCH_STONE_MARKS);
 
     // When
-    Room nextRoom = option.choose();
+    var nextRoom = option.choose();
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Als dein Finger in den Kerben liegt, spürst du aus dem Kreis einen Luftzug.");
@@ -133,15 +129,12 @@ class AdventureTest {
   @Test
   void shouldNoticeSwordInStoneWhenEnteringCircleAfterFeelingTheDraft() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room forest = adventure.start();
-    Room clearing = forest.option(GO_TO_CLEARING).choose();
-    Room largeStone = clearing.option(INSPECT_LARGE_STONE).choose();
-    Room strangeFeeling = largeStone.option(TOUCH_STONE_MARKS).choose();
-    Option option = strangeFeeling.option(ENTER_STONE_CIRCLE);
+    var adventure = new TextAdventure();
+    var strangeFeeling = goToStrangeFeeling(adventure);
+    var option = strangeFeeling.option(ENTER_STONE_CIRCLE);
 
     // When
-    Room nextRoom = option.choose();
+    var nextRoom = option.choose();
 
     // Then
     assertThat(nextRoom.description()).isEqualTo(
@@ -149,12 +142,43 @@ class AdventureTest {
   }
 
   @Test
+  void shouldFeelWarmthWhenPullingSwordFromStone() {
+    // Given
+    var adventure = new TextAdventure();
+    var swordInStone = goToSwordInStone(adventure);
+    var option = swordInStone.option(PULL_SWORD_FROM_STONE);
+
+    // When
+    var nextRoom = option.choose();
+
+    // Then
+    assertThat(nextRoom.description()).isEqualTo(
+        "Als du das Schwert aus dem Stein ziehst, glimmt die Klinge kurz auf und wird warm in deiner Hand.");
+  }
+
+  @Test
   void shouldRejectActionThatIsNotAvailableInRoom() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    Room forest = adventure.start();
+    var adventure = new TextAdventure();
+    var forest = adventure.start();
 
     // When / Then
     assertThatThrownBy(() -> forest.option(INSPECT_LARGE_STONE)).isInstanceOf(IllegalStateException.class);
+  }
+
+  private Room goToSwordInStone(TextAdventure adventure) {
+    return goToStrangeFeeling(adventure).option(ENTER_STONE_CIRCLE).choose();
+  }
+
+  private Room goToStrangeFeeling(TextAdventure adventure) {
+    return goToLargeStone(adventure).option(TOUCH_STONE_MARKS).choose();
+  }
+
+  private Room goToLargeStone(TextAdventure adventure) {
+    return goToClearing(adventure).option(INSPECT_LARGE_STONE).choose();
+  }
+
+  private Room goToClearing(TextAdventure adventure) {
+    return adventure.start().option(GO_TO_CLEARING).choose();
   }
 }

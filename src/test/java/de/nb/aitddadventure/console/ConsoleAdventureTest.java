@@ -17,11 +17,11 @@ class ConsoleAdventureTest {
   @Test
   void shouldPrintFirstRoomDescriptionWhenStarting() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    ConsoleAdventure consoleAdventure = new ConsoleAdventure(adventure);
+    var adventure = new TextAdventure();
+    var consoleAdventure = new ConsoleAdventure(adventure);
 
     // When
-    String output = consoleAdventure.run();
+    var output = consoleAdventure.run();
 
     // Then
     assertThat(output).contains(adventure.start().description());
@@ -30,11 +30,11 @@ class ConsoleAdventureTest {
   @Test
   void shouldPrintAvailableOptionsWhenStarting() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    ConsoleAdventure consoleAdventure = new ConsoleAdventure(adventure);
+    var adventure = new TextAdventure();
+    var consoleAdventure = new ConsoleAdventure(adventure);
 
     // When
-    String output = consoleAdventure.run();
+    var output = consoleAdventure.run();
 
     // Then
     assertThat(output) //
@@ -46,10 +46,10 @@ class ConsoleAdventureTest {
   @Test
   void shouldMoveToNextRoomWhenChoosingFirstOption() {
     // Given
-    TextAdventure adventure = new TextAdventure();
-    ConsoleAdventure consoleAdventure = new ConsoleAdventure(adventure);
-    StringWriter writer = new StringWriter();
-    PrintWriter output = new PrintWriter(writer);
+    var adventure = new TextAdventure();
+    var consoleAdventure = new ConsoleAdventure(adventure);
+    var writer = new StringWriter();
+    var output = new PrintWriter(writer);
     consoleAdventure.run();
 
     // When
