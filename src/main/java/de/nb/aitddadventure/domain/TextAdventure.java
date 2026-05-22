@@ -28,39 +28,39 @@ public class TextAdventure {
   }
 
   private Room createStartForest(Room clearing) {
-    return new Room("Du stehst in einem Wald.", new Option(GO_TO_CLEARING, clearing));
+    return new Room("Du bist in einem Wald.", new Option(GO_TO_CLEARING, clearing));
   }
 
   private Room createClearing(Room stoneCircle, Room largeStone, Room returnedForest) {
-    return new Room("Du stehst auf einer Lichtung, in der Mitte ein Steinkreis.", new Option(ENTER_STONE_CIRCLE, stoneCircle),
+    return new Room("Du kommst auf eine Lichtung. In ihrer Mitte liegt ein Steinkreis.", new Option(ENTER_STONE_CIRCLE, stoneCircle),
         new Option(INSPECT_LARGE_STONE, largeStone), new Option(GO_TO_FOREST, returnedForest));
   }
 
   private Room createReturnedForest(Room returnedClearing) {
-    return new Room("Du stehst wieder im Wald.", new Option(GO_TO_CLEARING, returnedClearing));
+    return new Room("Du gehst in den Wald zurück.", new Option(GO_TO_CLEARING, returnedClearing));
   }
 
   private Room createReturnedClearing(Room stoneCircle, Room largeStone) {
-    return new Room("Du betrittst wieder die Lichtung, in deren Mitte der Steinkreis steht.", new Option(ENTER_STONE_CIRCLE, stoneCircle),
+    return new Room("Du kommst wieder auf die Lichtung. In ihrer Mitte liegt der Steinkreis.", new Option(ENTER_STONE_CIRCLE, stoneCircle),
         new Option(INSPECT_LARGE_STONE, largeStone));
   }
 
   private Room createLargeStone(Room strangeFeeling) {
-    return new Room("In der Steinfläche entdeckst du frische Kerben, die nicht vom Wetter stammen.",
+    return new Room("Als du die Steinfläche näher ansiehst, entdeckst du frische Kerben, die nicht vom Wetter stammen.",
         new Option(TOUCH_STONE_MARKS, strangeFeeling));
   }
 
   private Room createStrangeFeeling(Room swordInStone) {
-    return new Room("Als dein Finger in den Kerben liegt, spürst du aus dem Kreis einen Luftzug.",
+    return new Room("Als du einen Finger in die Kerben legst, spürst du einen Luftzug aus dem Kreis.",
         new Option(ENTER_STONE_CIRCLE, swordInStone));
   }
 
   private Room createStoneCircle() {
-    return new Room("Zwischen den alten Steinen fühlst du dich unwohl.");
+    return new Room("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
   }
 
   private Room createSwordInStone(Room pulledSword) {
-    return new Room("Mitten im Steinkreis fällt dir ein großer Block auf - war der vorher schon da? In dem Block steckt ein Schwert.",
+    return new Room("Mitten im Steinkreis fällt dir ein großer Block auf. War der vorher schon da? In ihm steckt ein Schwert.",
         new Option(PULL_SWORD_FROM_STONE, pulledSword));
   }
 

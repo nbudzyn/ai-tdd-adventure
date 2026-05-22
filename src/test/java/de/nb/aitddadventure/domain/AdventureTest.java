@@ -24,7 +24,7 @@ class AdventureTest {
     var room = adventure.start();
 
     // Then
-    assertThat(room.description()).isEqualTo("Du stehst in einem Wald.");
+    assertThat(room.description()).isEqualTo("Du bist in einem Wald.");
   }
 
   @Test
@@ -52,7 +52,7 @@ class AdventureTest {
     var nextRoom = option.choose();
 
     // Then
-    assertThat(nextRoom.description()).isEqualTo("Du stehst auf einer Lichtung, in der Mitte ein Steinkreis.");
+    assertThat(nextRoom.description()).isEqualTo("Du kommst auf eine Lichtung. In ihrer Mitte liegt ein Steinkreis.");
   }
 
   @Test
@@ -66,7 +66,7 @@ class AdventureTest {
     var nextRoom = option.choose();
 
     // Then
-    assertThat(nextRoom.description()).isEqualTo("Du stehst wieder im Wald.");
+    assertThat(nextRoom.description()).isEqualTo("Du gehst in den Wald zurück.");
   }
 
   @Test
@@ -81,7 +81,7 @@ class AdventureTest {
     var nextRoom = option.choose();
 
     // Then
-    assertThat(nextRoom.description()).isEqualTo("Du betrittst wieder die Lichtung, in deren Mitte der Steinkreis steht.");
+    assertThat(nextRoom.description()).isEqualTo("Du kommst wieder auf die Lichtung. In ihrer Mitte liegt der Steinkreis.");
   }
 
   @Test
@@ -95,7 +95,7 @@ class AdventureTest {
     var nextRoom = option.choose();
 
     // Then
-    assertThat(nextRoom.description()).isEqualTo("Zwischen den alten Steinen fühlst du dich unwohl.");
+    assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
   }
 
   @Test
@@ -109,7 +109,8 @@ class AdventureTest {
     var nextRoom = option.choose();
 
     // Then
-    assertThat(nextRoom.description()).isEqualTo("In der Steinfläche entdeckst du frische Kerben, die nicht vom Wetter stammen.");
+    assertThat(nextRoom.description()).isEqualTo(
+        "Als du die Steinfläche näher ansiehst, entdeckst du frische Kerben, die nicht vom Wetter stammen.");
   }
 
   @Test
@@ -123,7 +124,7 @@ class AdventureTest {
     var nextRoom = option.choose();
 
     // Then
-    assertThat(nextRoom.description()).isEqualTo("Als dein Finger in den Kerben liegt, spürst du aus dem Kreis einen Luftzug.");
+    assertThat(nextRoom.description()).isEqualTo("Als du einen Finger in die Kerben legst, spürst du einen Luftzug aus dem Kreis.");
   }
 
   @Test
@@ -138,7 +139,7 @@ class AdventureTest {
 
     // Then
     assertThat(nextRoom.description()).isEqualTo(
-        "Mitten im Steinkreis fällt dir ein großer Block auf - war der vorher schon da? In dem Block steckt ein Schwert.");
+        "Mitten im Steinkreis fällt dir ein großer Block auf. War der vorher schon da? In ihm steckt ein Schwert.");
   }
 
   @Test
