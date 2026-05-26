@@ -11,6 +11,9 @@ import static de.nb.aitddadventure.domain.PlayerAction.RETURN_TO_FOREST;
 import static de.nb.aitddadventure.domain.PlayerAction.STEP_BACK_FROM_STONE_SURFACE;
 import static de.nb.aitddadventure.domain.PlayerAction.TOUCH_STONE_MARKS;
 
+import java.util.EnumMap;
+import java.util.List;
+
 /**
  * Aufbau der Welt des Textadventures mit ihrem Startpunkt.
  */
@@ -20,146 +23,166 @@ public class TextAdventure {
   }
 
   private Room createWorld() {
-    var links = createWorldLinks();
-    var rooms = createWorldRooms(links);
-    connectWorld(links, rooms);
-    RoomLink.validateAllConnected(
-        links.clearing(),
-        links.stoneCircle(),
-        links.stoneCircleExit(),
-        links.returnedForest(),
-        links.returnedClearing(),
-        links.largeStone(),
-        links.returnedLargeStone(),
-        links.stoneSurfaceClearing(),
-        links.stoneSurfaceReturnedClearing());
-    return rooms.startForest();
+    var roomDefinitions = createWorldDefinitions();
+    var roomLinks = createRoomLinks(roomDefinitions);
+    var rooms = createRooms(roomDefinitions, roomLinks);
+    return rooms.get(RoomId.START_FOREST);
   }
 
-  private WorldLinks createWorldLinks() {
-    return new WorldLinks(
-        new RoomLink("Lichtung am Anfang"),
-        new RoomLink("Steinkreis"),
-        new RoomLink("Ausgang aus dem Steinkreis"),
-        new RoomLink("Wald nach dem Verlassen des Steinkreises"),
-        new RoomLink("Zurueckgekehrte Lichtung nach dem Verlassen des Steinkreises"),
-        new RoomLink("Steinfläche an der Lichtung"),
-        new RoomLink("Steinfläche an der zurueckgekehrten Lichtung"),
-        new RoomLink("Lichtung nach dem Zuruecktreten von der Steinflaeche"),
-        new RoomLink("Zurueckgekehrte Lichtung nach dem Zuruecktreten von der Steinflaeche"));
+  private List<RoomDefinition> createWorldDefinitions() {
+    return List.of(createStartForest(), createClearing(), createReturnedForest(), createLargeStone(), createStoneSurfaceClearing(),
+        createReturnedClearing(), createStoneSurfaceReturnedClearing(), createStoneCircle(), createStoneCircleExit(),
+        createReturnedLargeStone(), createStrangeFeeling(), createSwordInStone(), createPulledSword());
   }
 
-  private WorldRooms createWorldRooms(WorldLinks links) {
-    var startForest = createStartForest(links.clearing());
-    var clearing = createClearing(links.stoneCircle(), links.largeStone(), links.returnedForest());
-    var stoneCircle = createStoneCircle(links.stoneCircleExit());
-    var stoneCircleExit = createStoneCircleExit(links.stoneCircle(), links.returnedForest());
-    var returnedForest = createReturnedForest(links.returnedClearing());
-    var returnedClearing = createReturnedClearing(links.stoneCircle(), links.returnedLargeStone(), links.returnedForest());
-    var pulledSword = createPulledSword();
-    var swordInStone = createSwordInStone(pulledSword);
-    var strangeFeeling = createStrangeFeeling(swordInStone, links.returnedForest());
-    var largeStone = createLargeStone(links.stoneSurfaceClearing(), strangeFeeling);
-    var returnedLargeStone = createLargeStone(links.stoneSurfaceReturnedClearing(), strangeFeeling);
-    var stoneSurfaceClearing = createStoneSurfaceStepBack(links.stoneCircle(), links.largeStone(), links.returnedForest());
-    var stoneSurfaceReturnedClearing = createStoneSurfaceStepBack(links.stoneCircle(), links.returnedLargeStone(), links.returnedForest());
-    return new WorldRooms(
-        startForest,
-        clearing,
-        stoneCircle,
-        stoneCircleExit,
-        returnedForest,
-        returnedClearing,
-        pulledSword,
-        swordInStone,
-        strangeFeeling,
-        largeStone,
-        returnedLargeStone,
-        stoneSurfaceClearing,
-        stoneSurfaceReturnedClearing);
+  private RoomDefinition createStartForest() {
+    return room(RoomId.START_FOREST, "Du bist in einem Wald.", option(GO_TO_CLEARING, RoomId.CLEARING));
   }
 
-  private void connectWorld(WorldLinks links, WorldRooms rooms) {
-    links.clearing().connect(rooms.clearing());
-    links.stoneCircle().connect(rooms.stoneCircle());
-    links.stoneCircleExit().connect(rooms.stoneCircleExit());
-    links.returnedForest().connect(rooms.returnedForest());
-    links.returnedClearing().connect(rooms.returnedClearing());
-    links.largeStone().connect(rooms.largeStone());
-    links.returnedLargeStone().connect(rooms.returnedLargeStone());
-    links.stoneSurfaceClearing().connect(rooms.stoneSurfaceClearing());
-    links.stoneSurfaceReturnedClearing().connect(rooms.stoneSurfaceReturnedClearing());
+  private RoomDefinition createReturnedForest() {
+    return room(RoomId.RETURNED_FOREST, "Du gehst in den Wald zurück.", option(RETURN_TO_CLEARING, RoomId.RETURNED_CLEARING));
   }
 
-  private Room createStartForest(RoomLink clearingLink) {
-    return new Room("Du bist in einem Wald.", new Option(GO_TO_CLEARING, clearingLink));
+  private RoomDefinition createReturnedClearing() {
+    return room(RoomId.RETURNED_CLEARING, "Du kommst wieder auf die Lichtung. In ihrer Mitte liegt der Steinkreis.",
+        option(ENTER_STONE_CIRCLE, RoomId.STONE_CIRCLE), option(INSPECT_LARGE_STONE, RoomId.RETURNED_LARGE_STONE),
+        option(GO_TO_FOREST, RoomId.RETURNED_FOREST));
   }
 
-  private Room createClearing(RoomLink stoneCircleLink, RoomLink largeStoneLink, RoomLink returnedForestLink) {
-    return createClearingLike("Du kommst auf eine Lichtung. In ihrer Mitte liegt ein Steinkreis.",
-        stoneCircleLink, largeStoneLink, returnedForestLink);
+  private RoomDefinition createStoneSurfaceClearing() {
+    return room(RoomId.STONE_SURFACE_CLEARING, "Du trittst von der Steinfläche zurück und stehst wieder auf der Lichtung.",
+        option(ENTER_STONE_CIRCLE, RoomId.STONE_CIRCLE), option(INSPECT_LARGE_STONE, RoomId.LARGE_STONE),
+        option(GO_TO_FOREST, RoomId.RETURNED_FOREST));
   }
 
-  private Room createReturnedForest(RoomLink returnedClearingLink) {
-    return new Room("Du gehst in den Wald zurück.", new Option(RETURN_TO_CLEARING, returnedClearingLink));
+  private RoomDefinition createStoneSurfaceReturnedClearing() {
+    return room(RoomId.STONE_SURFACE_RETURNED_CLEARING, "Du trittst von der Steinfläche zurück und stehst wieder auf der Lichtung.",
+        option(ENTER_STONE_CIRCLE, RoomId.STONE_CIRCLE), option(INSPECT_LARGE_STONE, RoomId.RETURNED_LARGE_STONE),
+        option(GO_TO_FOREST, RoomId.RETURNED_FOREST));
   }
 
-  private Room createReturnedClearing(RoomLink stoneCircleLink, RoomLink largeStoneLink, RoomLink returnedForestLink) {
-    return createClearingLike("Du kommst wieder auf die Lichtung. In ihrer Mitte liegt der Steinkreis.",
-        stoneCircleLink, largeStoneLink, returnedForestLink);
+  private RoomDefinition createStoneCircleExit() {
+    return room(RoomId.STONE_CIRCLE_EXIT, "Du trittst aus dem Steinkreis und kommst wieder auf die Lichtung.",
+        option(ENTER_STONE_CIRCLE, RoomId.STONE_CIRCLE), option(GO_TO_FOREST, RoomId.RETURNED_FOREST));
   }
 
-  private Room createClearingLike(String description, RoomLink stoneCircleLink, RoomLink largeStoneLink, RoomLink returnedForestLink) {
-    return new Room(description, new Option(ENTER_STONE_CIRCLE, stoneCircleLink),
-        new Option(INSPECT_LARGE_STONE, largeStoneLink), new Option(GO_TO_FOREST, returnedForestLink));
+  private RoomDefinition createClearing() {
+    return room(RoomId.CLEARING, "Du kommst auf eine Lichtung. In ihrer Mitte liegt ein Steinkreis.",
+        option(ENTER_STONE_CIRCLE, RoomId.STONE_CIRCLE), option(INSPECT_LARGE_STONE, RoomId.LARGE_STONE),
+        option(GO_TO_FOREST, RoomId.RETURNED_FOREST));
   }
 
-  private Room createStoneSurfaceStepBack(RoomLink stoneCircleLink, RoomLink largeStoneLink, RoomLink returnedForestLink) {
-    return new Room("Du trittst von der Steinfläche zurück und stehst wieder auf der Lichtung.",
-        new Option(ENTER_STONE_CIRCLE, stoneCircleLink),
-        new Option(INSPECT_LARGE_STONE, largeStoneLink),
-        new Option(GO_TO_FOREST, returnedForestLink));
+  private RoomDefinition createLargeStone() {
+    return room(RoomId.LARGE_STONE, "Als du die Steinfläche näher ansiehst, entdeckst du frische Kerben, die nicht vom Wetter stammen.",
+        option(STEP_BACK_FROM_STONE_SURFACE, RoomId.STONE_SURFACE_CLEARING), option(TOUCH_STONE_MARKS, RoomId.STRANGE_FEELING));
   }
 
-  private Room createLargeStone(RoomLink stepBackTarget, Room strangeFeeling) {
-    return new Room("Als du die Steinfläche näher ansiehst, entdeckst du frische Kerben, die nicht vom Wetter stammen.",
-        new Option(STEP_BACK_FROM_STONE_SURFACE, stepBackTarget),
-        new Option(TOUCH_STONE_MARKS, strangeFeeling));
+  private RoomDefinition createReturnedLargeStone() {
+    return room(RoomId.RETURNED_LARGE_STONE,
+        "Als du die Steinfläche näher ansiehst, entdeckst du frische Kerben, die nicht vom Wetter stammen.",
+        option(STEP_BACK_FROM_STONE_SURFACE, RoomId.STONE_SURFACE_RETURNED_CLEARING), option(TOUCH_STONE_MARKS, RoomId.STRANGE_FEELING));
   }
 
-  private Room createStrangeFeeling(Room swordInStone, RoomLink returnedForestLink) {
-    return new Room("Als du einen Finger in die Kerben legst, spürst du einen Luftzug aus dem Kreis.",
-        new Option(ENTER_STONE_CIRCLE, swordInStone),
-        new Option(RETURN_TO_FOREST, returnedForestLink));
+  private RoomDefinition createStrangeFeeling() {
+    return room(RoomId.STRANGE_FEELING, "Als du einen Finger in die Kerben legst, spürst du einen Luftzug aus dem Kreis.",
+        option(ENTER_STONE_CIRCLE, RoomId.SWORD_IN_STONE), option(RETURN_TO_FOREST, RoomId.RETURNED_FOREST));
   }
 
-  private Room createStoneCircle(RoomLink stoneCircleExitLink) {
-    return new Room("Du trittst zwischen die alten Steine und fühlst dich unwohl.",
-        new Option(EXIT_STONE_CIRCLE, stoneCircleExitLink));
+  private RoomDefinition createStoneCircle() {
+    return room(RoomId.STONE_CIRCLE, "Du trittst zwischen die alten Steine und fühlst dich unwohl.",
+        option(EXIT_STONE_CIRCLE, RoomId.STONE_CIRCLE_EXIT));
   }
 
-  private Room createStoneCircleExit(RoomLink stoneCircleLink, RoomLink returnedForestLink) {
-    return new Room("Du trittst aus dem Steinkreis und kommst wieder auf die Lichtung.",
-        new Option(ENTER_STONE_CIRCLE, stoneCircleLink),
-        new Option(GO_TO_FOREST, returnedForestLink));
+  private RoomDefinition createSwordInStone() {
+    return room(RoomId.SWORD_IN_STONE,
+        "Mitten im Steinkreis fällt dir ein großer Block auf. War der vorher schon da? In ihm steckt ein Schwert.",
+        option(PULL_SWORD_FROM_STONE, RoomId.PULLED_SWORD));
   }
 
-  private Room createSwordInStone(Room pulledSword) {
-    return new Room("Mitten im Steinkreis fällt dir ein großer Block auf. War der vorher schon da? In ihm steckt ein Schwert.",
-        new Option(PULL_SWORD_FROM_STONE, pulledSword));
+  private RoomDefinition createPulledSword() {
+    return room(RoomId.PULLED_SWORD, "Als du das Schwert aus dem Stein ziehst, glimmt die Klinge kurz auf und wird warm in deiner Hand.");
   }
 
-  private Room createPulledSword() {
-    return new Room("Als du das Schwert aus dem Stein ziehst, glimmt die Klinge kurz auf und wird warm in deiner Hand.");
+  private RoomDefinition room(RoomId id, String description, OptionDefinition... options) {
+    return new RoomDefinition(id, description, List.of(options));
   }
 
-  private record WorldLinks(RoomLink clearing, RoomLink stoneCircle, RoomLink stoneCircleExit, RoomLink returnedForest,
-      RoomLink returnedClearing, RoomLink largeStone, RoomLink returnedLargeStone, RoomLink stoneSurfaceClearing,
-      RoomLink stoneSurfaceReturnedClearing) {
+  private OptionDefinition option(PlayerAction action, RoomId target) {
+    return new OptionDefinition(action, target);
   }
 
-  private record WorldRooms(Room startForest, Room clearing, Room stoneCircle, Room stoneCircleExit, Room returnedForest,
-      Room returnedClearing, Room pulledSword, Room swordInStone, Room strangeFeeling, Room largeStone,
-      Room returnedLargeStone, Room stoneSurfaceClearing, Room stoneSurfaceReturnedClearing) {
+  private EnumMap<RoomId, RoomLink> createRoomLinks(List<RoomDefinition> roomDefinitions) {
+    var roomLinks = new EnumMap<RoomId, RoomLink>(RoomId.class);
+    for (var roomDefinition : roomDefinitions) {
+      roomLinks.put(roomDefinition.id(), new RoomLink(roomDefinition.id().linkName()));
+    }
+    return roomLinks;
+  }
+
+  private EnumMap<RoomId, Room> createRooms(List<RoomDefinition> roomDefinitions, EnumMap<RoomId, RoomLink> roomLinks) {
+    var rooms = new EnumMap<RoomId, Room>(RoomId.class);
+    for (var roomDefinition : roomDefinitions) {
+      rooms.put(roomDefinition.id(), createRoom(roomDefinition, roomLinks));
+    }
+    for (var roomDefinition : roomDefinitions) {
+      roomLinks.get(roomDefinition.id()).connect(rooms.get(roomDefinition.id()));
+    }
+    validateWorld(roomDefinitions, roomLinks);
+    return rooms;
+  }
+
+  private Room createRoom(RoomDefinition roomDefinition, EnumMap<RoomId, RoomLink> roomLinks) {
+    var options = roomDefinition.options().stream().map(option -> new Option(option.action(), roomLinks.get(option.target()))).toList();
+    return new Room(roomDefinition.description(), options);
+  }
+
+  private void validateWorld(List<RoomDefinition> roomDefinitions, EnumMap<RoomId, RoomLink> roomLinks) {
+    for (var roomDefinition : roomDefinitions) {
+      roomLinks.get(roomDefinition.id()).validateConnected();
+    }
+  }
+
+  /**
+   * Raumkennungen der Welt.
+   */
+  private enum RoomId {
+    START_FOREST("Lichtung am Anfang"),
+    CLEARING("Lichtung"),
+    RETURNED_FOREST("Wald nach dem Verlassen des Steinkreises"),
+    LARGE_STONE("Steinfläche an der Lichtung"),
+    STONE_SURFACE_CLEARING("Lichtung nach dem Zurücktreten von der Steinfläche"),
+    RETURNED_CLEARING("Zurückgekehrte Lichtung nach dem Verlassen des Steinkreises"),
+    STONE_SURFACE_RETURNED_CLEARING("Zurückgekehrte Lichtung nach dem Zurücktreten von der Steinfläche"),
+    STONE_CIRCLE("Steinkreis"),
+    STONE_CIRCLE_EXIT("Ausgang aus dem Steinkreis"),
+    RETURNED_LARGE_STONE("Steinfläche an der zurückgekehrten Lichtung"),
+    STRANGE_FEELING("Seltsames Gefühl"),
+    SWORD_IN_STONE("Schwert im Stein"),
+    PULLED_SWORD("Gezogenes Schwert");
+
+    private final String linkName;
+
+    RoomId(String linkName) {
+      this.linkName = linkName;
+    }
+
+    public String linkName() {
+      return linkName;
+    }
+  }
+
+  /**
+   * Definition eines Raums.
+   */
+  private record RoomDefinition(RoomId id, String description, List<OptionDefinition> options) {
+    private RoomDefinition {
+      options = List.copyOf(options);
+    }
+  }
+
+  /**
+   * Definition einer Raumoption.
+   */
+  private record OptionDefinition(PlayerAction action, RoomId target) {
   }
 }
