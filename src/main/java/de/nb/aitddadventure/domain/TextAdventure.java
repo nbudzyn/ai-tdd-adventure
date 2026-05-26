@@ -20,28 +20,48 @@ public class TextAdventure {
   }
 
   private Room createWorld() {
-    var stoneSurfaceClearingLink = new RoomLink("Lichtung nach dem Zuruecktreten von der Steinflaeche");
-    var stoneSurfaceReturnedClearingLink = new RoomLink("Zurueckgekehrte Lichtung nach dem Zuruecktreten von der Steinflaeche");
-    var stoneCircleLink = new RoomLink("Steinkreis nach dem Verlassen");
-    var returnedForestLink = new RoomLink("Wald nach dem Verlassen des Steinkreises");
-    var stoneCircleExit = createStoneCircleExit(stoneCircleLink, returnedForestLink);
+    var links = createWorldLinks();
+    var rooms = createWorldRooms(links);
+    connectWorld(links, rooms);
+    RoomLink.validateAllConnected(links.stoneSurfaceClearing(), links.stoneSurfaceReturnedClearing(), links.stoneCircle(), links.returnedForest());
+    return createStartForest(rooms.clearing());
+  }
+
+  private WorldLinks createWorldLinks() {
+    return new WorldLinks(
+        new RoomLink("Lichtung nach dem Zuruecktreten von der Steinflaeche"),
+        new RoomLink("Zurueckgekehrte Lichtung nach dem Zuruecktreten von der Steinflaeche"),
+        new RoomLink("Steinkreis nach dem Verlassen"),
+        new RoomLink("Wald nach dem Verlassen des Steinkreises"));
+  }
+
+  private WorldRooms createWorldRooms(WorldLinks links) {
+    var stoneCircleExit = createStoneCircleExit(links.stoneCircle(), links.returnedForest());
     var pulledSword = createPulledSword();
     var swordInStone = createSwordInStone(pulledSword);
     var stoneCircle = createStoneCircle(stoneCircleExit);
-    stoneCircleLink.connect(stoneCircle);
-    var strangeFeeling = createStrangeFeeling(swordInStone, returnedForestLink);
-    var largeStone = createLargeStone(stoneSurfaceClearingLink, strangeFeeling);
-    var returnedLargeStone = createLargeStone(stoneSurfaceReturnedClearingLink, strangeFeeling);
-    var stoneSurfaceClearing = createStoneSurfaceStepBack(stoneCircle, largeStone, returnedForestLink);
-    var stoneSurfaceReturnedClearing = createStoneSurfaceStepBack(stoneCircle, returnedLargeStone, returnedForestLink);
-    stoneSurfaceClearingLink.connect(stoneSurfaceClearing);
-    stoneSurfaceReturnedClearingLink.connect(stoneSurfaceReturnedClearing);
-    var returnedClearing = createReturnedClearing(stoneCircle, returnedLargeStone, returnedForestLink);
+    var strangeFeeling = createStrangeFeeling(swordInStone, links.returnedForest());
+    var largeStone = createLargeStone(links.stoneSurfaceClearing(), strangeFeeling);
+    var returnedLargeStone = createLargeStone(links.stoneSurfaceReturnedClearing(), strangeFeeling);
+    var stoneSurfaceClearing = createStoneSurfaceStepBack(stoneCircle, largeStone, links.returnedForest());
+    var stoneSurfaceReturnedClearing = createStoneSurfaceStepBack(stoneCircle, returnedLargeStone, links.returnedForest());
+    var returnedClearing = createReturnedClearing(stoneCircle, returnedLargeStone, links.returnedForest());
     var returnedForest = createReturnedForest(returnedClearing);
-    returnedForestLink.connect(returnedForest);
-    var clearing = createClearing(stoneCircle, largeStone, returnedForestLink);
-    RoomLink.validateAllConnected(stoneSurfaceClearingLink, stoneSurfaceReturnedClearingLink, stoneCircleLink, returnedForestLink);
-    return createStartForest(clearing);
+    var clearing = createClearing(stoneCircle, largeStone, links.returnedForest());
+    return new WorldRooms(
+        clearing,
+        stoneCircle,
+        stoneSurfaceClearing,
+        stoneSurfaceReturnedClearing,
+        returnedForest,
+        returnedClearing);
+  }
+
+  private void connectWorld(WorldLinks links, WorldRooms rooms) {
+    links.stoneCircle().connect(rooms.stoneCircle());
+    links.stoneSurfaceClearing().connect(rooms.stoneSurfaceClearing());
+    links.stoneSurfaceReturnedClearing().connect(rooms.stoneSurfaceReturnedClearing());
+    links.returnedForest().connect(rooms.returnedForest());
   }
 
   private Room createStartForest(Room clearing) {
@@ -104,5 +124,13 @@ public class TextAdventure {
 
   private Room createPulledSword() {
     return new Room("Als du das Schwert aus dem Stein ziehst, glimmt die Klinge kurz auf und wird warm in deiner Hand.");
+  }
+
+  private record WorldLinks(RoomLink stoneSurfaceClearing, RoomLink stoneSurfaceReturnedClearing, RoomLink stoneCircle,
+      RoomLink returnedForest) {
+  }
+
+  private record WorldRooms(Room clearing, Room stoneCircle, Room stoneSurfaceClearing, Room stoneSurfaceReturnedClearing,
+      Room returnedForest, Room returnedClearing) {
   }
 }
