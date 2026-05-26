@@ -23,11 +23,13 @@ public final class Option {
   }
 
   public Room choose() {
-    return targetLink.follow();
+    var room = targetLink.follow();
+    room.enter();
+    return room;
   }
 
   @VisibleForTesting
   public Room target() {
-    return choose();
+    return targetLink.follow();
   }
 }
