@@ -39,7 +39,7 @@ public class TextAdventure {
     var returnedClearing = createReturnedClearing(stoneCircle, returnedLargeStone, returnedForestLink);
     var returnedForest = createReturnedForest(returnedClearing);
     returnedForestLink.connect(returnedForest);
-    var clearing = createClearing(stoneCircle, largeStone, returnedForest);
+    var clearing = createClearing(stoneCircle, largeStone, returnedForestLink);
     RoomLink.validateAllConnected(stoneSurfaceClearingLink, stoneSurfaceReturnedClearingLink, stoneCircleLink, returnedForestLink);
     return createStartForest(clearing);
   }
@@ -48,9 +48,9 @@ public class TextAdventure {
     return new Room("Du bist in einem Wald.", new Option(GO_TO_CLEARING, clearing));
   }
 
-  private Room createClearing(Room stoneCircle, Room largeStone, Room returnedForest) {
-    return new Room("Du kommst auf eine Lichtung. In ihrer Mitte liegt ein Steinkreis.", new Option(ENTER_STONE_CIRCLE, stoneCircle),
-        new Option(INSPECT_LARGE_STONE, largeStone), new Option(GO_TO_FOREST, returnedForest));
+  private Room createClearing(Room stoneCircle, Room largeStone, RoomLink returnedForestLink) {
+    return createClearingLike("Du kommst auf eine Lichtung. In ihrer Mitte liegt ein Steinkreis.",
+        stoneCircle, largeStone, returnedForestLink);
   }
 
   private Room createReturnedForest(Room returnedClearing) {
@@ -58,7 +58,12 @@ public class TextAdventure {
   }
 
   private Room createReturnedClearing(Room stoneCircle, Room largeStone, RoomLink returnedForestLink) {
-    return new Room("Du kommst wieder auf die Lichtung. In ihrer Mitte liegt der Steinkreis.", new Option(ENTER_STONE_CIRCLE, stoneCircle),
+    return createClearingLike("Du kommst wieder auf die Lichtung. In ihrer Mitte liegt der Steinkreis.",
+        stoneCircle, largeStone, returnedForestLink);
+  }
+
+  private Room createClearingLike(String description, Room stoneCircle, Room largeStone, RoomLink returnedForestLink) {
+    return new Room(description, new Option(ENTER_STONE_CIRCLE, stoneCircle),
         new Option(INSPECT_LARGE_STONE, largeStone), new Option(GO_TO_FOREST, returnedForestLink));
   }
 
