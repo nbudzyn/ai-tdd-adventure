@@ -53,7 +53,7 @@ class AdventureTest {
     var option = room.option(GO_TO_CLEARING);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du kommst auf eine Lichtung. In ihrer Mitte liegt ein Steinkreis.");
@@ -67,7 +67,7 @@ class AdventureTest {
     var option = clearing.option(GO_TO_FOREST);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du gehst in den Wald zurück.");
@@ -77,7 +77,7 @@ class AdventureTest {
   void shouldOfferReturningToClearingWhenStandingInReturnedForest() {
     // Given
     var adventure = new TextAdventure();
-    var returnedForest = adventure.start().option(GO_TO_CLEARING).choose().option(GO_TO_FOREST).choose();
+    var returnedForest = adventure.choose(adventure.choose(adventure.start().option(GO_TO_CLEARING)).option(GO_TO_FOREST));
 
     // When
     var options = returnedForest.options();
@@ -92,11 +92,11 @@ class AdventureTest {
     // Given
     var adventure = new TextAdventure();
     var forest = adventure.start();
-    var returnedForest = forest.option(GO_TO_CLEARING).choose().option(GO_TO_FOREST).choose();
+    var returnedForest = adventure.choose(adventure.choose(forest.option(GO_TO_CLEARING)).option(GO_TO_FOREST));
     var option = returnedForest.option(RETURN_TO_CLEARING);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du kommst wieder auf die Lichtung. In ihrer Mitte liegt der Steinkreis.");
@@ -106,7 +106,9 @@ class AdventureTest {
   void shouldOfferReturningToForestAgainWhenStandingOnReturnedClearing() {
     // Given
     var adventure = new TextAdventure();
-    var returnedClearing = adventure.start().option(GO_TO_CLEARING).choose().option(GO_TO_FOREST).choose().option(RETURN_TO_CLEARING).choose();
+    var returnedClearing = adventure.choose(
+        adventure.choose(
+            adventure.choose(adventure.start().option(GO_TO_CLEARING)).option(GO_TO_FOREST)).option(RETURN_TO_CLEARING));
 
     // When
     var options = returnedClearing.options();
@@ -126,7 +128,7 @@ class AdventureTest {
     var option = clearing.option(ENTER_STONE_CIRCLE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
@@ -140,7 +142,7 @@ class AdventureTest {
     var option = stoneCircle.option(EXIT_STONE_CIRCLE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du trittst aus dem Steinkreis und kommst wieder auf die Lichtung.");
@@ -151,7 +153,7 @@ class AdventureTest {
     // Given
     var adventure = new TextAdventure();
     var stoneCircle = goToStoneCircle(adventure);
-    var clearingAfterStoneCircle = stoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var clearingAfterStoneCircle = adventure.choose(stoneCircle.option(EXIT_STONE_CIRCLE));
 
     // When
     var options = clearingAfterStoneCircle.options();
@@ -166,13 +168,13 @@ class AdventureTest {
     // Given
     var adventure = new TextAdventure();
     var stoneCircle = goToStoneCircle(adventure);
-    var clearingAfterStoneCircle = stoneCircle.option(EXIT_STONE_CIRCLE).choose();
-    var forest = clearingAfterStoneCircle.option(GO_TO_FOREST).choose();
-    var clearing = forest.option(RETURN_TO_CLEARING).choose();
+    var clearingAfterStoneCircle = adventure.choose(stoneCircle.option(EXIT_STONE_CIRCLE));
+    var forest = adventure.choose(clearingAfterStoneCircle.option(GO_TO_FOREST));
+    var clearing = adventure.choose(forest.option(RETURN_TO_CLEARING));
     var option = clearing.option(ENTER_STONE_CIRCLE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
@@ -183,17 +185,17 @@ class AdventureTest {
     // Given
     var adventure = new TextAdventure();
     var firstStoneCircle = goToStoneCircle(adventure);
-    var firstClearingAfterStoneCircle = firstStoneCircle.option(EXIT_STONE_CIRCLE).choose();
-    var firstForest = firstClearingAfterStoneCircle.option(GO_TO_FOREST).choose();
-    var firstClearing = firstForest.option(RETURN_TO_CLEARING).choose();
-    var secondStoneCircle = firstClearing.option(ENTER_STONE_CIRCLE).choose();
-    var secondClearingAfterStoneCircle = secondStoneCircle.option(EXIT_STONE_CIRCLE).choose();
-    var secondForest = secondClearingAfterStoneCircle.option(GO_TO_FOREST).choose();
-    var secondClearing = secondForest.option(RETURN_TO_CLEARING).choose();
+    var firstClearingAfterStoneCircle = adventure.choose(firstStoneCircle.option(EXIT_STONE_CIRCLE));
+    var firstForest = adventure.choose(firstClearingAfterStoneCircle.option(GO_TO_FOREST));
+    var firstClearing = adventure.choose(firstForest.option(RETURN_TO_CLEARING));
+    var secondStoneCircle = adventure.choose(firstClearing.option(ENTER_STONE_CIRCLE));
+    var secondClearingAfterStoneCircle = adventure.choose(secondStoneCircle.option(EXIT_STONE_CIRCLE));
+    var secondForest = adventure.choose(secondClearingAfterStoneCircle.option(GO_TO_FOREST));
+    var secondClearing = adventure.choose(secondForest.option(RETURN_TO_CLEARING));
     var option = secondClearing.option(ENTER_STONE_CIRCLE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
@@ -204,11 +206,11 @@ class AdventureTest {
     // Given
     var adventure = new TextAdventure();
     var stoneCircle = goToStoneCircle(adventure);
-    var clearingAfterStoneCircle = stoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var clearingAfterStoneCircle = adventure.choose(stoneCircle.option(EXIT_STONE_CIRCLE));
     var option = clearingAfterStoneCircle.option(ENTER_STONE_CIRCLE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
@@ -219,13 +221,13 @@ class AdventureTest {
     // Given
     var adventure = new TextAdventure();
     var firstStoneCircle = goToStoneCircle(adventure);
-    var firstClearingAfterStoneCircle = firstStoneCircle.option(EXIT_STONE_CIRCLE).choose();
-    var secondStoneCircle = firstClearingAfterStoneCircle.option(ENTER_STONE_CIRCLE).choose();
-    var secondClearingAfterStoneCircle = secondStoneCircle.option(EXIT_STONE_CIRCLE).choose();
+    var firstClearingAfterStoneCircle = adventure.choose(firstStoneCircle.option(EXIT_STONE_CIRCLE));
+    var secondStoneCircle = adventure.choose(firstClearingAfterStoneCircle.option(ENTER_STONE_CIRCLE));
+    var secondClearingAfterStoneCircle = adventure.choose(secondStoneCircle.option(EXIT_STONE_CIRCLE));
     var option = secondClearingAfterStoneCircle.option(ENTER_STONE_CIRCLE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du trittst zwischen die alten Steine und fühlst dich unwohl.");
@@ -239,7 +241,7 @@ class AdventureTest {
     var option = clearing.option(INSPECT_LARGE_STONE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo(
@@ -254,7 +256,7 @@ class AdventureTest {
     var option = largeStone.option(TOUCH_STONE_MARKS);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Als du einen Finger in die Kerben legst, spürst du einen Luftzug aus dem Kreis.");
@@ -283,7 +285,7 @@ class AdventureTest {
     var option = largeStone.option(STEP_BACK_FROM_STONE_SURFACE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo("Du trittst von der Steinfläche zurück und stehst wieder auf der Lichtung.");
@@ -297,7 +299,7 @@ class AdventureTest {
     var option = strangeFeeling.option(ENTER_STONE_CIRCLE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo(
@@ -312,7 +314,7 @@ class AdventureTest {
     var option = swordInStone.option(PULL_SWORD_FROM_STONE);
 
     // When
-    var nextRoom = option.choose();
+    var nextRoom = adventure.choose(option);
 
     // Then
     assertThat(nextRoom.description()).isEqualTo(
@@ -330,22 +332,22 @@ class AdventureTest {
   }
 
   private Room goToSwordInStone(TextAdventure adventure) {
-    return goToStrangeFeeling(adventure).option(ENTER_STONE_CIRCLE).choose();
+    return adventure.choose(goToStrangeFeeling(adventure).option(ENTER_STONE_CIRCLE));
   }
 
   private Room goToStoneCircle(TextAdventure adventure) {
-    return goToClearing(adventure).option(ENTER_STONE_CIRCLE).choose();
+    return adventure.choose(goToClearing(adventure).option(ENTER_STONE_CIRCLE));
   }
 
   private Room goToStrangeFeeling(TextAdventure adventure) {
-    return goToLargeStone(adventure).option(TOUCH_STONE_MARKS).choose();
+    return adventure.choose(goToLargeStone(adventure).option(TOUCH_STONE_MARKS));
   }
 
   private Room goToLargeStone(TextAdventure adventure) {
-    return goToClearing(adventure).option(INSPECT_LARGE_STONE).choose();
+    return adventure.choose(goToClearing(adventure).option(INSPECT_LARGE_STONE));
   }
 
   private Room goToClearing(TextAdventure adventure) {
-    return adventure.start().option(GO_TO_CLEARING).choose();
+    return adventure.choose(adventure.start().option(GO_TO_CLEARING));
   }
 }

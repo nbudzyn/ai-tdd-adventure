@@ -32,7 +32,7 @@ public class ConsoleAdventure {
   public void play(final Scanner scanner, final PrintWriter output) {
     var i = scanner.nextInt() - 1;
     scanner.nextLine();
-    currentRoom = currentRoom.option(i).choose();
+    currentRoom = adventure.choose(currentRoom.option(i));
 
     output.println(renderRoom());
   }

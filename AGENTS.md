@@ -36,7 +36,6 @@ Wir entwickeln strikt testgetrieben in kleinen Zyklen.
 
 - Tests sind im Given-When-Then-Stil strukturiert.
 - Tests prüfen Fachlichkeit, nicht I/O.
-- User-Auswahl erfolgt über `option.choose()`.
 - Räume liefern Beschreibung und verfügbare Optionen.
 - Jede Produktivklasse trägt einen deutschen Klassenkommentar.
 - Klassenkommentare im Produktivcode sind knappe Nominalphrasen, die ein Objekt beschreiben.

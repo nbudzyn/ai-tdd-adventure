@@ -57,6 +57,6 @@ class ConsoleAdventureTest {
     output.flush();
 
     // Then
-    assertThat(writer.toString()).contains(adventure.start().option(GO_TO_CLEARING).target().description());
+    assertThat(writer.toString()).contains(adventure.choose(adventure.start().option(GO_TO_CLEARING)).description());
   }
 }
